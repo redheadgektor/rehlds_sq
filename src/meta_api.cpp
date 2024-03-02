@@ -52,7 +52,7 @@ static META_FUNCTIONS gMetaFunctionTable = {
 plugin_info_t Plugin_info = {
 	META_INTERFACE_VERSION,	// ifvers
 	"REHLDS-SourceQuery",	// name
-	"0.0.2",	// version
+	"0.0.3",	// version
 	__DATE__,	// date
 	"t.me/redheadgektor",	// author
 	"",	// url
