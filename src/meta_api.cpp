@@ -105,7 +105,6 @@ const char default_env = 'l';
 #endif
 
 //cvars
-cvar_t* cvarp_hostname;
 cvar_t* cvarp_password;
 cvar_t* cvarp_tags;
 cvar_t* cvarp_version;
@@ -115,6 +114,9 @@ cvar_t* p_sq_showpackets;
 
 cvar_t sq_query = { "sq_query", "1", FCVAR_EXTDLL, 0.0f, NULL };
 cvar_t* p_sq_query;
+
+cvar_t sq_hostname = { "sq_hostname", "-1", FCVAR_EXTDLL, 0.0f, NULL };
+cvar_t* p_sq_hostname;
 
 cvar_t sq_hideplayers = { "sq_hideplayers", "0", FCVAR_EXTDLL, 0.0f, NULL };
 cvar_t* p_sq_hideplayers;
@@ -175,17 +177,19 @@ void InitCvars()
 	g_engfuncs.pfnAddServerCommand("sq_help", SQ_HELP);
 
 	//cache cvars
-	cvarp_hostname = g_engfuncs.pfnCVarGetPointer("hostname");
 	cvarp_password = g_engfuncs.pfnCVarGetPointer("sv_password");
 	cvarp_tags = g_engfuncs.pfnCVarGetPointer("sv_tags");
 	cvarp_version = g_engfuncs.pfnCVarGetPointer("sv_version");
 
 	//register cvars
+	g_engfuncs.pfnCvar_RegisterVariable(&sq_showpackets);
+	p_sq_showpackets = g_engfuncs.pfnCVarGetPointer(sq_showpackets.name);
+
 	g_engfuncs.pfnCvar_RegisterVariable(&sq_query);
 	p_sq_query = g_engfuncs.pfnCVarGetPointer(sq_query.name);
 
-	g_engfuncs.pfnCvar_RegisterVariable(&sq_showpackets);
-	p_sq_showpackets = g_engfuncs.pfnCVarGetPointer(sq_showpackets.name);
+	g_engfuncs.pfnCvar_RegisterVariable(&sq_hostname);
+	p_sq_hostname = g_engfuncs.pfnCVarGetPointer(sq_hostname.name);
 
 	g_engfuncs.pfnCvar_RegisterVariable(&sq_hideplayers);
 	p_sq_hideplayers = g_engfuncs.pfnCVarGetPointer(sq_hideplayers.name);
@@ -319,7 +323,15 @@ void Info_SourceQuery()
 	}
 
 	//hostname
-	stream.writeS(cvarp_hostname->string);
+	if (p_sq_hostname->value != -1)
+	{
+		stream.writeS(p_sq_hostname->string);
+	}
+	else
+	{
+
+		stream.writeS(g_RehldsServerData->GetName());
+	}
 
 	//map
 	if (p_sq_map->value != -1)
