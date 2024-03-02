@@ -105,6 +105,7 @@ const char default_env = 'l';
 #endif
 
 //cvars
+cvar_t* cvarp_hostname;
 cvar_t* cvarp_password;
 cvar_t* cvarp_tags;
 cvar_t* cvarp_version;
@@ -177,6 +178,7 @@ void InitCvars()
 	g_engfuncs.pfnAddServerCommand("sq_help", SQ_HELP);
 
 	//cache cvars
+	cvarp_hostname = g_engfuncs.pfnCVarGetPointer("hostname");
 	cvarp_password = g_engfuncs.pfnCVarGetPointer("sv_password");
 	cvarp_tags = g_engfuncs.pfnCVarGetPointer("sv_tags");
 	cvarp_version = g_engfuncs.pfnCVarGetPointer("sv_version");
@@ -330,7 +332,7 @@ void Info_SourceQuery()
 	else
 	{
 
-		stream.writeS(g_RehldsServerData->GetName());
+		stream.writeS(cvarp_hostname->string);
 	}
 
 	//map

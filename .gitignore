@@ -6,6 +6,7 @@
 **/msvc/*.suo
 **/msvc/ipch
 .vs/
+bin/
 *.obj
 *.recipe
 *.log
