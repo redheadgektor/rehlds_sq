@@ -28,10 +28,10 @@ sq_protocol "-1"
 //карта
 sq_map "-1"
 
-//директория игры
+//директория игры (мода)
 sq_gamedir "-1"
 
-//имя игры
+//имя игры (мода)
 sq_gamename "-1"
 
 //номер игры в магазине Steam (https://developer.valvesoftware.com/wiki/Steam_Application_IDs)
@@ -44,7 +44,7 @@ sq_players "-1"
 sq_maxplayers "-1"
 
 //ботов
-sq_bots "-1"
+sq_bots "0"
 
 //тип сервера
 //0 - выделенный
