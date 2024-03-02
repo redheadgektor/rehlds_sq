@@ -1,6 +1,6 @@
 # ReHLDS Query Handler
 Плагин для изменения значений ответа SourceQuery для клиентов, мониторингов и остальных браузеров
-
+![alt text](https://github.com/redheadgektor/rehlds_sq/blob/main/proof.png?raw=true)
 # Commands
 ```
 sq_help
