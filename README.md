@@ -22,6 +22,9 @@ sq_hostname "-1"
 //скрывает список игроков
 sq_hideplayers "0"
 
+//скрывает имена игроков
+sq_hideplayersname "0"
+
 //скрывает квары
 sq_hiderules "0"
 
