@@ -35,7 +35,7 @@
  *
  */
 #include "precompiled.h"
-
+#include <list>
  // Must provide at least one of these..
 static META_FUNCTIONS gMetaFunctionTable = {
 	NULL,			// pfnGetEntityAPI				HL SDK; called before game DLL
@@ -122,6 +122,10 @@ cvar_t* p_sq_hostname;
 cvar_t sq_hideplayers = { "sq_hideplayers", "0", FCVAR_EXTDLL, 0.0f, NULL };
 cvar_t* p_sq_hideplayers;
 
+cvar_t sq_hideplayersname = { "sq_hideplayersname", "0", FCVAR_EXTDLL, 0.0f, NULL };
+cvar_t* p_sq_hideplayersname;
+
+
 cvar_t sq_hiderules = { "sq_hiderules", "0", FCVAR_EXTDLL, 0.0f, NULL };
 cvar_t* p_sq_hiderules;
 
@@ -195,6 +199,9 @@ void InitCvars()
 
 	g_engfuncs.pfnCvar_RegisterVariable(&sq_hideplayers);
 	p_sq_hideplayers = g_engfuncs.pfnCVarGetPointer(sq_hideplayers.name);
+	
+	g_engfuncs.pfnCvar_RegisterVariable(&sq_hideplayersname);
+	p_sq_hideplayersname = g_engfuncs.pfnCVarGetPointer(sq_hideplayersname.name);
 
 	g_engfuncs.pfnCvar_RegisterVariable(&sq_hiderules);
 	p_sq_hiderules = g_engfuncs.pfnCVarGetPointer(sq_hiderules.name);
@@ -461,6 +468,17 @@ void Info_SourceQuery()
 	}
 }
 
+
+/* Players */
+
+typedef struct S2A_Player_s
+{
+	byte index;
+	const char* name;
+	int score;
+	int time;
+} S2A_Player_t;
+
 void Players_SourceQuery() 
 {
 	stream.pointer = 0;
@@ -480,9 +498,16 @@ void Players_SourceQuery()
 		{
 			client_t* cl = g_RehldsServerStatic->GetClient_t(i);
 			stream.write1(i);
-			stream.writeS(client->GetName());
+			stream.writeS(p_sq_hideplayersname->value > 0 ? "Hidden" : client->GetName());
 			stream.write4(client->GetEdict()->v.frags);
-			stream.write4(gpGlobals->time-cl->connecttime);
+
+			if (!client->IsFakeClient()) {
+				stream.write4float(g_RehldsApi->GetFuncs()->GetRealTime() - cl->netchan.connect_time);
+			}
+			else 
+			{
+				stream.write4float(RANDOM_FLOAT(0,10000));
+			}
 			count++;
 		}
 	}
