@@ -65,6 +65,21 @@ public:
 	virtual bool IsConnected() = 0;
 	virtual void SetConnected(bool connected) = 0;
 
+	// Which other clients does this guy's voice stream go to?
+	virtual uint32 GetVoiceStream(int stream_id) = 0;
+	virtual void SetLastVoiceTime(double time) = 0;
+	virtual double GetLastVoiceTime() = 0;
+
+	// Does this client want to hear his own voice?
+	virtual bool GetLoopback() = 0;
+	virtual struct usercmd_s* GetLastCmd() = 0;
+
+	// This is spectator proxy (hltv)
+	virtual bool IsProxy() = 0;
+	virtual void SetProxy(bool proxy) = 0;
+
+	// This client is a fake player controlled by the game DLL
+	virtual bool IsFakeClient() = 0;
 
 	// this must be the last virtual function in class
 #ifdef REHLDS_SELF
