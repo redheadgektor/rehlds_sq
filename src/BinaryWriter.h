@@ -27,6 +27,11 @@ public:
         pointer += 4;
     }
 
+    inline void write4float(float value) {
+        memcpy(&buffer[pointer], &value, 4);
+        pointer += 4;
+    }
+
     inline void write8(long long value) {
         memcpy(&buffer[pointer], &value, 8);
         pointer += 8;
