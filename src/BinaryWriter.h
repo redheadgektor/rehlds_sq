@@ -58,10 +58,6 @@ public:
         if (fstream.is_open()) {
             fstream.write(buffer, pointer);
             fstream.close();
-            std::cout << "Данные успешно записаны в файл: " << name << std::endl;
-        }
-        else {
-            std::cerr << "Ошибка открытия файла для записи: " << name << std::endl;
         }
     }
 
