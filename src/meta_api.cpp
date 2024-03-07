@@ -125,6 +125,8 @@ cvar_t* p_sq_hideplayers;
 cvar_t sq_hideplayersname = { "sq_hideplayersname", "0", FCVAR_EXTDLL, 0.0f, NULL };
 cvar_t* p_sq_hideplayersname;
 
+cvar_t sq_drawfakeplayers = { "sq_drawfakeplayers", "0", FCVAR_EXTDLL, 0.0f, NULL };
+cvar_t* p_sq_drawfakeplayers;
 
 cvar_t sq_hiderules = { "sq_hiderules", "0", FCVAR_EXTDLL, 0.0f, NULL };
 cvar_t* p_sq_hiderules;
@@ -202,6 +204,9 @@ void InitCvars()
 	
 	g_engfuncs.pfnCvar_RegisterVariable(&sq_hideplayersname);
 	p_sq_hideplayersname = g_engfuncs.pfnCVarGetPointer(sq_hideplayersname.name);
+
+	g_engfuncs.pfnCvar_RegisterVariable(&sq_drawfakeplayers);
+	p_sq_drawfakeplayers = g_engfuncs.pfnCVarGetPointer(sq_drawfakeplayers.name);
 
 	g_engfuncs.pfnCvar_RegisterVariable(&sq_hiderules);
 	p_sq_hiderules = g_engfuncs.pfnCVarGetPointer(sq_hiderules.name);
@@ -490,24 +495,46 @@ void Players_SourceQuery()
 	stream.pointer++;
 
 	//FIXED: FATAL ERROR (shutting down): GetClient: invalid id provided: 32
-	for (int i = 0; i < g_RehldsServerStatic->GetMaxClientsLimit(); i++)
+	if (p_sq_drawfakeplayers->value <= 0) 
 	{
-		IGameClient* client = g_RehldsServerStatic->GetClient(i);
-
-		if (client->IsActive() && client->IsConnected()) 
+		for (int i = 0; i < g_RehldsServerStatic->GetMaxClientsLimit(); i++)
 		{
-			client_t* cl = g_RehldsServerStatic->GetClient_t(i);
-			stream.write1(i);
-			stream.writeS(p_sq_hideplayersname->value > 0 ? "Hidden" : client->GetName());
-			stream.write4(client->GetEdict()->v.frags);
+			IGameClient* client = g_RehldsServerStatic->GetClient(i);
 
-			if (!client->IsFakeClient()) {
-				stream.write4float(g_RehldsApi->GetFuncs()->GetRealTime() - cl->netchan.connect_time);
-			}
-			else 
+			if (client->IsActive() && client->IsConnected())
 			{
-				stream.write4float(RANDOM_FLOAT(0,10000));
+				client_t* cl = g_RehldsServerStatic->GetClient_t(i);
+				stream.write1(i);
+				if (p_sq_hideplayersname->value > 0)
+				{
+					stream.writeS("Hidden");
+				}
+				else
+				{
+					stream.writeS(client->GetName());
+				}
+				stream.write4(client->GetEdict()->v.frags);
+
+				if (!client->IsFakeClient())
+				{
+					stream.write4float(g_RehldsApi->GetFuncs()->GetRealTime() - cl->netchan.connect_time);
+				}
+				else
+				{
+					stream.write4float(RANDOM_FLOAT(0, 10000));
+				}
+				count++;
 			}
+		}
+	}
+	else 
+	{
+		for (int i = 0; i < (int)p_sq_drawfakeplayers->value; i++) 
+		{
+			stream.write1(i);
+			stream.writeS("Player");
+			stream.write4(RANDOM_LONG(0, 1000));
+			stream.write4float(RANDOM_FLOAT(0, 10000));
 			count++;
 		}
 	}
