@@ -1,10 +1,9 @@
 # ReHLDS Query Handler
 Плагин для изменения значений ответа SourceQuery для клиентов, мониторингов и остальных браузеров
 ![alt text](https://github.com/redheadgektor/rehlds_sq/blob/main/proof.png?raw=true)
-# Commands
-```
-sq_help
-```
+
+> [!WARNING]
+Falsification in most cases leads to the ban of the server in the master servers
 
 ```
 //Квары имеющие значение -1 будут использовать значения сервера
